@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório — Vibrações e Oscilações (Oscilador Harmônico e Amortecido)</title>
+<style>
+  :root{
+    --navy:#143d59; --blue:#1f5f8b; --teal:#178a8c; --amber:#d98324;
+    --red:#c1452f; --purple:#6d5896; --ink:#1f2733; --muted:#5d6b7a;
+    --line:#d8e1ea; --fbg:#eef5fb; --good:#2a9d6f;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0; padding:0;}
+  body{
+    font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,system-ui,sans-serif;
+    color:var(--ink); background:#e9eef4; line-height:1.6; font-size:16px;
+  }
+  .page{
+    max-width:820px; margin:24px auto; background:#fff; padding:46px 56px 60px;
+    box-shadow:0 10px 30px rgba(20,61,89,.10); border-radius:6px;
+  }
+  .math{font-family:"Cambria Math","Latin Modern Math",Cambria,Georgia,"Times New Roman",serif;}
+  header.doc{border-bottom:3px solid var(--navy); padding-bottom:16px; margin-bottom:8px;}
+  header.doc h1{font-size:1.7rem; color:var(--navy); margin:0 0 .3em; line-height:1.25;}
+  header.doc .meta{font-size:.95rem; color:#33414f; line-height:1.8;}
+  header.doc .meta b{color:var(--navy);}
+  header.doc .tema{margin-top:.5em; font-size:.9rem; color:var(--muted);}
+  h2{font-size:1.22rem; color:var(--navy); margin:1.6em 0 .5em; padding-bottom:4px; border-bottom:1px solid var(--line);}
+  h3{font-size:1.04rem; color:var(--blue); margin:1.15em 0 .35em;}
+  p{margin:.6em 0; text-align:justify;}
+  ul,ol{margin:.5em 0 .7em; padding-left:1.4em;}
+  li{margin:.32em 0;}
+  strong{color:var(--navy);}
+  .muted{color:var(--muted);} .small{font-size:.9rem;}
+  a{color:var(--blue);}
+  .notacaixa{background:#f6f9fc; border:1px solid var(--line); border-left:4px solid var(--teal);
+    border-radius:8px; padding:11px 16px; margin:14px 0; font-size:.94rem; color:#33414f;}
+
+  /* fórmulas */
+  .formula{position:relative; background:var(--fbg); border:1px solid #d4e3f2; border-left:5px solid var(--blue);
+    border-radius:9px; padding:11px 16px; margin:12px 0; font-size:1.18rem; text-align:center; color:#11324a;}
+  .formula.key{border-left-color:var(--amber); background:#fbf3e8; border-color:#f0dcc0;}
+  .formula .eqn{position:absolute; right:10px; bottom:5px; font-size:.7rem; color:var(--muted); font-weight:600;}
+  .frac{display:inline-flex; flex-direction:column; text-align:center; vertical-align:middle; margin:0 .18em; font-size:.95em;}
+  .frac>.num{border-bottom:1.6px solid currentColor; padding:0 .4em 1px;}
+  .frac>.den{padding:1px .4em 0;}
+  .sqrt{display:inline-flex; align-items:flex-start; vertical-align:middle;}
+  .sqrt::before{content:"\221A"; margin-right:1px; transform:scaleY(1.25); transform-origin:bottom;}
+  .sqrt>.rad{border-top:1.6px solid currentColor; padding:2px .3em 0;}
+
+  /* tabelas */
+  table{border-collapse:collapse; width:100%; margin:14px 0; font-size:.92rem;}
+  th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top;}
+  thead th{background:var(--navy); color:#fff; font-weight:600;}
+  tbody tr:nth-child(even){background:#f6f9fc;}
+  td .yes{color:var(--good); font-weight:700;} td .no{color:var(--red); font-weight:700;}
+
+  /* figuras */
+  figure{margin:16px 0; text-align:center; page-break-inside:avoid; break-inside:avoid;}
+  svg{max-width:100%; height:auto;}
+  figcaption{font-size:.82rem; color:var(--muted); margin-top:6px;}
+  .legend{display:flex; flex-wrap:wrap; gap:6px 16px; justify-content:center; font-size:.82rem; margin-top:6px;}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:18px; height:4px; border-radius:2px; display:inline-block;}
+
+  .toolbar{max-width:820px; margin:12px auto -8px; text-align:right;}
+  .toolbar button{background:var(--navy); color:#fff; border:none; border-radius:7px; padding:8px 16px;
+    font-size:.9rem; cursor:pointer;}
+  .toolbar button:hover{background:var(--blue);}
+
+  @media print{
+    @page{ size:A4; margin:15mm 15mm; }
+    body{background:#fff; font-size:10.6pt;}
+    .page{box-shadow:none; margin:0; max-width:none; padding:0; border-radius:0;}
+    .toolbar{display:none;}
+    h2{break-after:avoid; margin:1.0em 0 .35em; font-size:1.12rem; padding-bottom:3px;}
+    h3{break-after:avoid; margin:.8em 0 .26em;}
+    p{margin:.4em 0; orphans:2; widows:2;}
+    .formula{font-size:1.0rem; padding:6px 12px; margin:7px 0;}
+    .formula, table, .notacaixa, figure{break-inside:avoid;}
+    .notacaixa{margin:9px 0; padding:8px 13px;}
+    figure{margin:9px 0;} figure svg{max-width:400px;}
+    figcaption{margin-top:4px;}
+    table{margin:9px 0;} ul,ol{margin:.35em 0 .5em;}
+  }
+</style>
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ Imprimir / Salvar em PDF</button></div>
+<article class="page">
+
+  <header class="doc">
+    <h1>Vibrações e Oscilações<br>Oscilador Harmônico e Oscilador Amortecido</h1>
+    <div class="meta">
+      <b>Aluno:</b> Pedro Vinicius Marçal Naves Queiroz<br>
+      <b>Disciplina:</b> Mecânica Geral (39A) &nbsp;&nbsp; <b>Professor:</b> José Romão Franca<br>
+      <b>Data de apresentação:</b> 1 de julho de 2026
+    </div>
+    <div class="tema">Tema: Vibrações mecânicas — Capítulo 22 de HIBBELER, R. C., <em>Dinâmica</em>.</div>
+  </header>
+
+  <div class="notacaixa">
+    <b>Nota sobre a notação.</b> Uso a notação do livro-texto: <span class="math">ẋ = dx/dt</span> e
+    <span class="math">ẍ = d²x/dt²</span> (derivadas no tempo), <span class="math">sen</span> para o seno,
+    <span class="math">T</span> para o período (o livro adota <span class="math">τ</span>) e <span class="math">ω<sub>n</sub></span> para a frequência natural.
+    Onde o livro escreve a razão de amortecimento como <span class="math">c/c<sub>c</sub></span>, também uso o
+    símbolo padrão <span class="math">ζ</span> (zeta).
+  </div>
+
+  <h2>1. Introdução</h2>
+  <p>Vibrações estão por toda parte na engenharia: na corda de um instrumento, na asa de um avião, em um
+  edifício durante um terremoto e na suspensão de um automóvel. Estudar vibrações é entender como um sistema
+  mecânico responde quando é tirado de seu repouso e deixado livre — ou quando é continuamente excitado por uma
+  força externa.</p>
+  <p>Este relatório trata da <strong>vibração livre de sistemas de um grau de liberdade</strong>, seguindo o
+  Capítulo 22 do livro de Dinâmica de R. C. Hibbeler. O objetivo é, partindo apenas da <strong>2ª Lei de
+  Newton</strong>, construir e interpretar dois modelos fundamentais: o <strong>oscilador harmônico simples</strong>
+  (massa-mola sem atrito) e o <strong>oscilador amortecido</strong> (massa-mola com amortecimento viscoso). Para
+  cada um, montamos a equação diferencial de movimento, apresentamos a <strong>forma da solução</strong> (sem a
+  dedução matemática completa, conforme o escopo do trabalho) e discutimos seu <strong>significado físico</strong>.
+  Ao final, aplicamos a teoria ao caso dos amortecedores de carros e motos.</p>
+
+  <h2>2. O que são vibrações e oscilações</h2>
+  <p>Uma <strong>vibração</strong> (ou oscilação) é o <strong>movimento periódico</strong> de um corpo em torno
+  de uma <strong>posição de equilíbrio</strong> — a posição em que a força resultante é nula. O movimento existe
+  por causa de uma <strong>força restauradora</strong>, que sempre aponta de volta para o equilíbrio. Ao
+  deslocarmos o corpo e soltá-lo, essa força o acelera de volta; mas, ao chegar ao equilíbrio, ele já tem
+  velocidade e passa direto, indo para o outro lado. Esse vai e volta é a oscilação.</p>
+  <p>Há <strong>vibração livre</strong> (mantida por forças internas elásticas ou gravitacionais) e
+  <strong>vibração forçada</strong> (causada por força externa periódica). Ela ainda pode ser <strong>não
+  amortecida</strong> (desprezando o atrito) ou <strong>amortecida</strong> (com dissipação de energia). Aqui
+  tratamos da vibração <strong>livre</strong>, primeiro sem e depois com amortecimento.</p>
+  <table>
+    <thead><tr><th>Grandeza</th><th>Símbolo</th><th>Significado</th></tr></thead>
+    <tbody>
+      <tr><td>Deslocamento</td><td class="math">x(t)</td><td>afastamento em relação ao equilíbrio</td></tr>
+      <tr><td>Amplitude</td><td class="math">A</td><td>deslocamento máximo</td></tr>
+      <tr><td>Período</td><td class="math">T</td><td>tempo para um ciclo</td></tr>
+      <tr><td>Frequência</td><td class="math">f</td><td>ciclos por segundo, <span class="math">f = 1/T</span> (Hz)</td></tr>
+      <tr><td>Frequência natural</td><td class="math">ω<sub>n</sub></td><td>rapidez natural da oscilação (rad/s)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3. Oscilador harmônico simples (sem amortecimento)</h2>
+
+  <h3>3.1 Modelo físico</h3>
+  <p>O modelo mais simples é um <strong>bloco de massa <span class="math">m</span></strong> preso a uma
+  <strong>mola de constante <span class="math">k</span></strong>, deslizando sobre uma superfície horizontal
+  <strong>lisa</strong> (sem atrito). Medimos <span class="math">x</span> a partir do equilíbrio.</p>
+  <figure>
+    <svg viewBox="0 0 460 200" role="img" aria-label="Bloco preso a uma mola sobre superfície lisa">
+              <!-- parede -->
+              <line x1="30" y1="55" x2="30" y2="172" stroke="#33414f" stroke-width="3"/>
+              <g stroke="#9aa7b3" stroke-width="2">
+                <line x1="30" y1="58" x2="20" y2="68"/><line x1="30" y1="70" x2="20" y2="80"/>
+                <line x1="30" y1="82" x2="20" y2="92"/><line x1="30" y1="94" x2="20" y2="104"/>
+                <line x1="30" y1="106" x2="20" y2="116"/><line x1="30" y1="118" x2="20" y2="128"/>
+                <line x1="30" y1="130" x2="20" y2="140"/><line x1="30" y1="142" x2="20" y2="152"/>
+                <line x1="30" y1="154" x2="20" y2="164"/>
+              </g>
+              <!-- piso -->
+              <line x1="30" y1="172" x2="445" y2="172" stroke="#33414f" stroke-width="3"/>
+              <g stroke="#9aa7b3" stroke-width="2">
+                <line x1="44" y1="172" x2="34" y2="184"/><line x1="64" y1="172" x2="54" y2="184"/>
+                <line x1="84" y1="172" x2="74" y2="184"/><line x1="104" y1="172" x2="94" y2="184"/>
+                <line x1="124" y1="172" x2="114" y2="184"/><line x1="144" y1="172" x2="134" y2="184"/>
+                <line x1="164" y1="172" x2="154" y2="184"/><line x1="184" y1="172" x2="174" y2="184"/>
+                <line x1="204" y1="172" x2="194" y2="184"/><line x1="224" y1="172" x2="214" y2="184"/>
+                <line x1="244" y1="172" x2="234" y2="184"/><line x1="264" y1="172" x2="254" y2="184"/>
+                <line x1="284" y1="172" x2="274" y2="184"/><line x1="304" y1="172" x2="294" y2="184"/>
+                <line x1="324" y1="172" x2="314" y2="184"/><line x1="344" y1="172" x2="334" y2="184"/>
+                <line x1="364" y1="172" x2="354" y2="184"/><line x1="384" y1="172" x2="374" y2="184"/>
+                <line x1="404" y1="172" x2="394" y2="184"/><line x1="424" y1="172" x2="414" y2="184"/>
+              </g>
+              <!-- mola -->
+              <path d="M30 120 H58 l8 -16 l16 32 l16 -32 l16 32 l16 -32 l16 32 l8 -16 H190"
+                    fill="none" stroke="var(--navy)" stroke-width="2.4"/>
+              <text x="108" y="92" class="math" font-size="18" fill="var(--navy)" font-style="italic">k</text>
+              <!-- linha de equilíbrio (desenhada antes do bloco; o bloco cobre o trecho central) -->
+              <line x1="232" y1="56" x2="232" y2="172" stroke="#c1452f" stroke-width="1.6" stroke-dasharray="5 4"/>
+              <!-- bloco -->
+              <rect x="190" y="90" width="84" height="60" rx="4" fill="#cfe0ee" stroke="var(--blue)" stroke-width="2.2"/>
+              <text x="232" y="126" text-anchor="middle" class="math" font-size="22" fill="var(--navy)" font-style="italic">m</text>
+              <!-- rótulos -->
+              <text x="232" y="48" text-anchor="middle" font-size="11" fill="#c1452f">equilíbrio</text>
+              <line x1="232" y1="74" x2="330" y2="74" stroke="#c1452f" stroke-width="1.8"/>
+              <polygon points="330,74 322,70 322,78" fill="#c1452f"/>
+              <text x="300" y="68" class="math" font-size="18" fill="#c1452f" font-style="italic">x</text>
+              <text x="356" y="78" font-size="11" fill="#c1452f">(+)</text>
+            </svg>
+    <figcaption>Figura 1 — Oscilador massa-mola: bloco <span class="math">m</span>, mola <span class="math">k</span>,
+    deslocamento <span class="math">x</span> medido a partir do equilíbrio.</figcaption>
+  </figure>
+  <p>Pela <strong>Lei de Hooke</strong>, a força da mola é proporcional ao deslocamento e de sentido oposto:</p>
+  <div class="formula key math">F<sub>s</sub> = &minus; k x</div>
+  <p>O sinal negativo expressa que a mola é uma <strong>força restauradora</strong>: se <span class="math">x &gt; 0</span>,
+  a força aponta para a esquerda; se <span class="math">x &lt; 0</span>, para a direita. Em ambos os casos, ela
+  tenta levar o bloco de volta ao equilíbrio.</p>
+
+  <h3>3.2 Aplicação da 2ª Lei de Newton</h3>
+  <p>No diagrama de corpo livre do bloco deslocado, o peso <span class="math">W = mg</span> e a normal
+  <span class="math">N</span> se equilibram na vertical; na horizontal, age só a mola. Com <span class="math">a = ẍ</span>:</p>
+  <div class="formula math">&Sigma;F<sub>x</sub> = m ẍ &nbsp;&rarr;&nbsp; &minus; k x = m ẍ</div>
+  <p>Reorganizando, obtemos a equação de movimento na forma padrão:</p>
+  <div class="formula key math">m ẍ + k x = 0 <span class="eqn">Eq. 22.1</span></div>
+  <p>A <strong>aceleração é proporcional ao deslocamento e de sinal oposto</strong> — o critério do
+  <strong>Movimento Harmônico Simples (MHS)</strong>. Matematicamente, é uma <strong>EDO de 2ª ordem, linear,
+  homogênea e de coeficientes constantes</strong> (homogênea porque o lado direito é zero: vibração livre).</p>
+
+  <h3>3.3 Equação diferencial e frequência natural</h3>
+  <p>Dividindo por <span class="math">m</span> e definindo a <strong>frequência natural</strong>:</p>
+  <div class="formula math">ẍ + <span class="frac"><span class="num">k</span><span class="den">m</span></span> x = 0
+    &nbsp;&nbsp;&nbsp; com &nbsp;&nbsp;&nbsp;
+    ω<sub>n</sub> = <span class="sqrt"><span class="rad"><span class="frac"><span class="num">k</span><span class="den">m</span></span></span></span>
+    <span class="eqn">Eq. 22.2</span></div>
+  <p>a equação assume a <strong>forma padrão do oscilador harmônico</strong>:</p>
+  <div class="formula key math">ẍ + ω<sub>n</sub><sup>2</sup> x = 0 <span class="eqn">Eq. 22.1 / 22.16</span></div>
+  <p><strong>Interpretação de <span class="math">ω<sub>n</sub></span>:</strong> indica a rapidez natural da
+  oscilação (rad/s) e depende <strong>apenas do sistema</strong> — mola mais rígida (<span class="math">k</span>↑)
+  oscila mais rápido; massa maior (<span class="math">m</span>↑) oscila mais devagar.</p>
+
+  <h3>3.4 Solução geral e suas formas equivalentes</h3>
+  <p>Basta reconhecer a forma da solução de <span class="math">ẍ + ω<sub>n</sub><sup>2</sup>x = 0</span>, que pode
+  ser escrita de três maneiras equivalentes:</p>
+  <div class="formula math">x(t) = C<sub>1</sub> cos(ω<sub>n</sub>t) + C<sub>2</sub> sen(ω<sub>n</sub>t) <span class="eqn">Eq. 22.3</span></div>
+  <div class="formula math">x(t) = A cos(ω<sub>n</sub>t &minus; φ)</div>
+  <div class="formula math">x(t) = C e<sup>&#8201;iω<sub>n</sub>t</sup> + D e<sup>&minus;iω<sub>n</sub>t</sup></div>
+  <p>Aqui <span class="math">A</span> é a amplitude e <span class="math">φ</span> o ângulo de fase, com
+  <span class="math">A = <span class="sqrt"><span class="rad">C<sub>1</sub><sup>2</sup> + C<sub>2</sub><sup>2</sup></span></span></span>.
+  Pela <strong>fórmula de Euler</strong> (<span class="math">e<sup>&#8201;iθ</sup> = cos θ + i&nbsp;sen θ</span>), as
+  três formas descrevem o mesmo movimento. O <strong>deslocamento físico é real e oscilatório</strong>: na forma
+  complexa, as constantes se combinam de modo que a parte imaginária se cancela. As duas constantes de cada forma
+  são fixadas pelas <strong>condições iniciais</strong> <span class="math">x(0)</span> e <span class="math">ẋ(0)</span>.</p>
+
+  <h3>3.5 Interpretação física</h3>
+  <p>No modelo ideal sem atrito, o movimento <strong>continua indefinidamente</strong> com <strong>amplitude
+  constante</strong>, e a <strong>energia mecânica se conserva</strong>, alternando entre cinética (máxima no
+  equilíbrio) e potencial elástica (máxima nos extremos). O <strong>período</strong> e a <strong>frequência</strong> são:</p>
+  <div class="formula math">T = <span class="frac"><span class="num">2π</span><span class="den">ω<sub>n</sub></span></span>
+    = 2π <span class="sqrt"><span class="rad"><span class="frac"><span class="num">m</span><span class="den">k</span></span></span></span>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    f = <span class="frac"><span class="num">1</span><span class="den">T</span></span> = <span class="frac"><span class="num">ω<sub>n</sub></span><span class="den">2π</span></span>
+    <span class="eqn">Eq. 22.12–22.14</span></div>
+  <p>Uma característica marcante do MHS: <strong>o período e a frequência não dependem da amplitude</strong>,
+  apenas de <span class="math">k</span> e <span class="math">m</span> (<span class="math">1 Hz = 1 ciclo/s</span>).</p>
+
+  <h2>4. Oscilador amortecido (amortecimento viscoso)</h2>
+
+  <h3>4.1 Modelo físico e força de amortecimento</h3>
+  <p>Todo sistema real perde energia por atrito. O caso mais comum é o <strong>amortecimento viscoso</strong>,
+  em que o corpo se move em um fluido ou está ligado a um amortecedor (pistão com óleo). A força de arrasto é
+  <strong>proporcional à velocidade</strong> e <strong>oposta a ela</strong>:</p>
+  <figure>
+    <svg viewBox="0 0 470 215" role="img" aria-label="Sistema massa-mola-amortecedor">
+              <!-- parede -->
+              <line x1="28" y1="40" x2="28" y2="196" stroke="#33414f" stroke-width="3"/>
+              <g stroke="#9aa7b3" stroke-width="2">
+                <line x1="28" y1="44" x2="18" y2="54"/><line x1="28" y1="58" x2="18" y2="68"/>
+                <line x1="28" y1="72" x2="18" y2="82"/><line x1="28" y1="86" x2="18" y2="96"/>
+                <line x1="28" y1="100" x2="18" y2="110"/><line x1="28" y1="114" x2="18" y2="124"/>
+                <line x1="28" y1="128" x2="18" y2="138"/><line x1="28" y1="142" x2="18" y2="152"/>
+                <line x1="28" y1="156" x2="18" y2="166"/><line x1="28" y1="170" x2="18" y2="180"/>
+              </g>
+              <!-- piso -->
+              <line x1="28" y1="196" x2="455" y2="196" stroke="#33414f" stroke-width="3"/>
+              <g stroke="#9aa7b3" stroke-width="2">
+                <line x1="42" y1="196" x2="32" y2="208"/><line x1="72" y1="196" x2="62" y2="208"/>
+                <line x1="102" y1="196" x2="92" y2="208"/><line x1="132" y1="196" x2="122" y2="208"/>
+                <line x1="162" y1="196" x2="152" y2="208"/><line x1="192" y1="196" x2="182" y2="208"/>
+                <line x1="222" y1="196" x2="212" y2="208"/><line x1="252" y1="196" x2="242" y2="208"/>
+                <line x1="282" y1="196" x2="272" y2="208"/><line x1="312" y1="196" x2="302" y2="208"/>
+                <line x1="342" y1="196" x2="332" y2="208"/><line x1="372" y1="196" x2="362" y2="208"/>
+                <line x1="402" y1="196" x2="392" y2="208"/><line x1="432" y1="196" x2="422" y2="208"/>
+              </g>
+              <!-- mola (em cima) -->
+              <path d="M28 84 H52 l8 -14 l16 28 l16 -28 l16 28 l16 -28 l8 14 H200"
+                    fill="none" stroke="var(--navy)" stroke-width="2.4"/>
+              <text x="118" y="58" class="math" font-size="18" fill="var(--navy)" font-style="italic">k</text>
+              <!-- amortecedor (embaixo) -->
+              <line x1="28" y1="150" x2="64" y2="150" stroke="#444" stroke-width="2.4"/>
+              <path d="M112 134 H64 V166 H112" fill="none" stroke="#444" stroke-width="2.4"/>
+              <line x1="92" y1="137" x2="92" y2="163" stroke="#444" stroke-width="5"/>
+              <line x1="92" y1="150" x2="200" y2="150" stroke="#444" stroke-width="2.4"/>
+              <text x="84" y="126" class="math" font-size="18" fill="#7a4b00" font-style="italic">c</text>
+              <!-- linha de equilíbrio (desenhada antes do bloco) -->
+              <line x1="243" y1="42" x2="243" y2="196" stroke="#c1452f" stroke-width="1.6" stroke-dasharray="5 4"/>
+              <!-- bloco -->
+              <rect x="200" y="74" width="86" height="96" rx="4" fill="#cfe0ee" stroke="var(--blue)" stroke-width="2.2"/>
+              <text x="243" y="128" text-anchor="middle" class="math" font-size="22" fill="var(--navy)" font-style="italic">m</text>
+              <!-- seta x -->
+              <line x1="286" y1="60" x2="356" y2="60" stroke="#c1452f" stroke-width="1.8"/>
+              <polygon points="356,60 348,56 348,64" fill="#c1452f"/>
+              <text x="320" y="54" class="math" font-size="17" fill="#c1452f" font-style="italic">x</text>
+            </svg>
+    <figcaption>Figura 2 — Sistema massa-mola-amortecedor: o amortecedor (coeficiente <span class="math">c</span>)
+    dissipa energia; equivale a um bloco imerso em fluido viscoso.</figcaption>
+  </figure>
+  <div class="formula key math">F<sub>d</sub> = &minus; c ẋ</div>
+  <p>onde <span class="math">c</span> é o <strong>coeficiente de amortecimento viscoso</strong> (N·s/m). O sinal
+  negativo indica que o amortecimento <strong>sempre se opõe ao movimento</strong>. Quanto maior
+  <span class="math">c</span>, mais energia é dissipada por ciclo.</p>
+
+  <h3>4.2 Aplicação da 2ª Lei de Newton</h3>
+  <p>Agora há duas forças horizontais — a da mola (<span class="math">&minus;kx</span>) e a de amortecimento
+  (<span class="math">&minus;cẋ</span>). Aplicando <span class="math">&Sigma;F<sub>x</sub> = m ẍ</span>:</p>
+  <div class="formula math">&minus; k x &minus; c ẋ = m ẍ</div>
+  <div class="formula key math">m ẍ + c ẋ + k x = 0 <span class="eqn">Eq. 22.27</span></div>
+  <p>Significado de cada termo: <span class="math">m ẍ</span> é a <strong>inércia</strong>; <span class="math">c ẋ</span>
+  é o <strong>amortecimento</strong> (dissipa energia, depende da velocidade); e <span class="math">k x</span> é a
+  <strong>restauração elástica</strong> (depende da posição). É a mesma equação anterior com um termo novo.</p>
+
+  <h3>4.3 Forma padrão: <span class="math">ω<sub>n</sub></span>, <span class="math">c<sub>c</sub></span> e <span class="math">ζ</span></h3>
+  <p>Dividindo por <span class="math">m</span> (mantendo <span class="math">ω<sub>n</sub> = <span class="sqrt"><span class="rad">k/m</span></span></span>),
+  definimos o <strong>amortecimento crítico</strong> e a <strong>razão de amortecimento</strong>:</p>
+  <div class="formula math">
+    c<sub>c</sub> = 2<span class="sqrt"><span class="rad">k m</span></span> = 2 m ω<sub>n</sub>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    ζ = <span class="frac"><span class="num">c</span><span class="den">c<sub>c</sub></span></span>
+      = <span class="frac"><span class="num">c</span><span class="den">2<span class="sqrt"><span class="rad">k m</span></span></span></span>
+    <span class="eqn">Eq. 22.29</span></div>
+  <p>Substituindo <span class="math">c/m = 2ζω<sub>n</sub></span> e <span class="math">k/m = ω<sub>n</sub><sup>2</sup></span>,
+  a equação assume a <strong>forma padrão universal</strong>:</p>
+  <div class="formula key math">ẍ + 2 ζ ω<sub>n</sub> ẋ + ω<sub>n</sub><sup>2</sup> x = 0</div>
+  <p>O <span class="math">c<sub>c</sub></span> é a fronteira entre oscilar e não oscilar; o <span class="math">ζ</span>
+  (adimensional) mede quanto de amortecimento há. <strong>Basta o valor de <span class="math">ζ</span> para
+  classificar o movimento.</strong></p>
+
+  <h3>4.4 Equação característica e os três casos</h3>
+  <p>Tentando <span class="math">x = e<sup>&#8201;λt</sup></span> em <span class="math">m ẍ + c ẋ + k x = 0</span>,
+  obtém-se a <strong>equação característica</strong> e suas raízes:</p>
+  <div class="formula math">m λ<sup>2</sup> + c λ + k = 0
+    &nbsp;&nbsp;&rarr;&nbsp;&nbsp;
+    λ<sub>1</sub>, λ<sub>2</sub> = &minus; <span class="frac"><span class="num">c</span><span class="den">2m</span></span>
+    ± <span class="sqrt"><span class="rad">( <span class="frac"><span class="num">c</span><span class="den">2m</span></span> )<sup>2</sup> &minus; <span class="frac"><span class="num">k</span><span class="den">m</span></span></span></span>
+    <span class="eqn">Eq. 22.28</span></div>
+  <p>A natureza das raízes (reais ou complexas) depende da comparação entre <span class="math">c</span> e
+  <span class="math">c<sub>c</sub></span>, gerando três casos. Apresentamos a forma de cada solução e sua
+  interpretação (sem a dedução completa).</p>
+
+  <h3>4.5 Caso 1 — Subamortecido (<span class="math">0 &lt; ζ &lt; 1</span>, isto é, <span class="math">c &lt; c<sub>c</sub></span>)</h3>
+  <p>Raízes <strong>complexas</strong>. A solução é uma oscilação multiplicada por uma exponencial decrescente:</p>
+  <div class="formula math">x(t) = e<sup>&minus;ζω<sub>n</sub>t</sup> [ C<sub>1</sub> cos(ω<sub>d</sub>t) + C<sub>2</sub> sen(ω<sub>d</sub>t) ]
+    <span class="eqn">Eq. 22.32</span></div>
+  <div class="formula math">ω<sub>d</sub> = ω<sub>n</sub> <span class="sqrt"><span class="rad">1 &minus; ζ<sup>2</sup></span></span>
+    <span class="eqn">Eq. 22.33</span></div>
+  <p><strong>Interpretação:</strong> o sistema <strong>ainda oscila</strong>, mas a amplitude <strong>decai
+  exponencialmente</strong> (o fator <span class="math">e<sup>&minus;ζω<sub>n</sub>t</sup></span> é um envelope que
+  encolhe). Como <span class="math">ω<sub>d</sub> &lt; ω<sub>n</sub></span>, oscila um pouco mais devagar que o ideal.
+  É o caso de amortecimento leve/moderado (ex.: uma porta de mola que balança antes de parar).</p>
+
+  <h3>4.6 Caso 2 — Criticamente amortecido (<span class="math">ζ = 1</span>, isto é, <span class="math">c = c<sub>c</sub></span>)</h3>
+  <p>Raízes <strong>reais e iguais</strong> (<span class="math">λ<sub>1</sub> = λ<sub>2</sub> = &minus;ω<sub>n</sub></span>):</p>
+  <div class="formula math">x(t) = ( C<sub>1</sub> + C<sub>2</sub> t ) e<sup>&minus;ω<sub>n</sub>t</sup> <span class="eqn">Eq. 22.31</span></div>
+  <p><strong>Interpretação:</strong> o sistema <strong>não oscila</strong> e retorna direto ao equilíbrio. É o
+  <strong>retorno mais rápido possível sem ultrapassar</strong> o equilíbrio (sem <em>overshoot</em>) e
+  corresponde ao <strong>menor</strong> valor de <span class="math">c</span> que elimina a oscilação. Por isso é
+  frequentemente adotado como <strong>meta de projeto</strong>.</p>
+
+  <h3>4.7 Caso 3 — Superamortecido (<span class="math">ζ &gt; 1</span>, isto é, <span class="math">c &gt; c<sub>c</sub></span>)</h3>
+  <p>Raízes <strong>reais e distintas</strong> (ambas negativas). Soma de duas exponenciais decrescentes:</p>
+  <div class="formula math">x(t) = C<sub>1</sub> e<sup>&#8201;r<sub>1</sub>t</sup> + C<sub>2</sub> e<sup>&#8201;r<sub>2</sub>t</sup>
+    &nbsp;&nbsp;&nbsp; r<sub>1</sub>, r<sub>2</sub> = &minus; ω<sub>n</sub> ( ζ ± <span class="sqrt"><span class="rad">ζ<sup>2</sup> &minus; 1</span></span> )
+    <span class="eqn">Eq. 22.30</span></div>
+  <p><strong>Interpretação:</strong> o sistema <strong>não oscila</strong>, mas o amortecimento é tão forte que o
+  corpo <strong>volta arrastando</strong> ao equilíbrio, <strong>mais lentamente</strong> que no caso crítico.
+  Amortecimento em excesso deixa o sistema lento e pouco responsivo.</p>
+
+  <h3>4.8 Quadro comparativo</h3>
+  <table>
+    <thead><tr><th>Tipo</th><th>Condição</th><th>Forma da solução</th><th>Oscila?</th><th>Comportamento</th></tr></thead>
+    <tbody>
+      <tr><td>Não amortecido</td><td class="math">ζ = 0</td><td class="math">A cos(ω<sub>n</sub>t &minus; φ)</td><td><span class="yes">Sim</span>, sempre</td><td>amplitude constante (ideal)</td></tr>
+      <tr><td>Subamortecido</td><td class="math">0 &lt; ζ &lt; 1</td><td class="math">e<sup>&minus;ζω<sub>n</sub>t</sup>[C<sub>1</sub>cos ω<sub>d</sub>t + C<sub>2</sub>sen ω<sub>d</sub>t]</td><td><span class="yes">Sim</span>, decai</td><td>oscila e perde amplitude</td></tr>
+      <tr><td>Criticamente amortecido</td><td class="math">ζ = 1</td><td class="math">(C<sub>1</sub> + C<sub>2</sub>t) e<sup>&minus;ω<sub>n</sub>t</sup></td><td><span class="no">Não</span></td><td>retorno mais rápido, sem ultrapassar</td></tr>
+      <tr><td>Superamortecido</td><td class="math">ζ &gt; 1</td><td class="math">C<sub>1</sub>e<sup>r<sub>1</sub>t</sup> + C<sub>2</sub>e<sup>r<sub>2</sub>t</sup></td><td><span class="no">Não</span></td><td>retorno lento, "arrastado"</td></tr>
+    </tbody>
+  </table>
+  <figure>
+    <svg viewBox="0 0 620 320" role="img" aria-label="Comparação dos quatro regimes de amortecimento">
+          <line x1="50" y1="160" x2="612" y2="160" stroke="#9aa7b3" stroke-width="1.5"/>
+          <polygon points="612,160 602,155 602,165" fill="#9aa7b3"/>
+          <line x1="55" y1="305" x2="55" y2="26" stroke="#9aa7b3" stroke-width="1.5"/>
+          <polygon points="55,26 50,36 60,36" fill="#9aa7b3"/>
+          <text x="34" y="34" font-size="14" class="math" fill="#5d6b7a" font-style="italic">x</text>
+          <text x="602" y="180" font-size="14" class="math" fill="#5d6b7a" font-style="italic">t</text>
+          <path d="M55 50 L60 52 L65 57 L70 66 L75 77 L80 92 L85 108 L90 126 L95 146 L100 165 L105 185 L110 204 L114 221 L119 237 L124 249 L129 259 L134 266 L139 270 L144 269 L149 266 L154 259 L159 248 L164 235 L169 220 L174 202 L179 183 L184 164 L189 144 L194 125 L199 107 L204 90 L209 76 L214 65 L219 56 L223 51 L228 50 L233 52 L238 58 L243 67 L248 79 L253 93 L258 110 L263 128 L268 147 L273 167 L278 187 L283 205 L288 223 L293 238 L298 250 L303 260 L308 267 L313 270 L318 269 L323 265 L328 258 L332 247 L337 234 L342 218 L347 200 L352 181 L357 162 L362 142 L367 123 L372 105 L377 89 L382 75 L387 64 L392 56 L397 51 L402 50 L407 53 L412 58 L417 68 L422 80 L427 95 L432 111 L437 130 L441 149 L446 169 L451 189 L456 207 L461 224 L466 239 L471 252 L476 261 L481 267 L486 270 L491 269 L496 265 L501 257 L506 246 L511 232 L516 216 L521 199 L526 180 L531 160 L536 140 L541 121 L546 103 L550 87 L555 74 L560 63 L565 55 L570 51 L575 50 L580 53 L585 59 L590 69 L595 81 L600 96" fill="none" stroke="var(--blue)" stroke-width="2" opacity=".95"/>
+          <path d="M55 50 L60 52 L65 57 L70 65 L75 76 L80 89 L85 104 L90 119 L95 136 L100 152 L105 169 L110 184 L114 197 L119 209 L124 219 L129 227 L134 232 L139 235 L144 235 L149 233 L154 228 L159 222 L164 214 L169 205 L174 194 L179 183 L184 172 L189 160 L194 150 L199 140 L204 131 L209 123 L214 117 L219 112 L223 110 L228 109 L233 109 L238 111 L243 115 L248 120 L253 126 L258 132 L263 140 L268 147 L273 155 L278 163 L283 170 L288 177 L293 182 L298 187 L303 191 L308 193 L313 195 L318 195 L323 194 L328 192 L332 190 L337 186 L342 182 L347 177 L352 172 L357 166 L362 161 L367 156 L372 151 L377 147 L382 143 L387 140 L392 138 L397 137 L402 136 L407 136 L412 137 L417 139 L422 141 L427 143 L432 147 L437 150 L441 154 L446 157 L451 161 L456 164 L461 167 L466 170 L471 172 L476 174 L481 175 L486 176 L491 176 L496 176 L501 175 L506 174 L511 172 L516 170 L521 168 L526 166 L531 163 L536 161 L541 158 L546 156 L550 154 L555 152 L560 151 L565 150 L570 149 L575 149 L580 149 L585 149 L590 150 L595 151 L600 152" fill="none" stroke="var(--teal)" stroke-width="2.4"/>
+          <path d="M55 50 L60 52 L65 56 L70 61 L75 68 L80 75 L85 82 L90 89 L95 96 L100 103 L105 109 L110 115 L114 120 L119 125 L124 129 L129 133 L134 136 L139 139 L144 142 L149 144 L154 146 L159 148 L164 150 L169 151 L174 152 L179 153 L184 154 L189 155 L194 156 L199 156 L204 157 L209 157 L214 158 L219 158 L223 158 L228 159 L233 159 L238 159 L243 159 L248 159 L253 159 L258 159 L263 160 L268 160 L273 160 L278 160 L283 160 L288 160 L293 160 L298 160 L303 160 L308 160 L313 160 L318 160 L323 160 L328 160 L332 160 L337 160 L342 160 L347 160 L352 160 L357 160 L362 160 L367 160 L372 160 L377 160 L382 160 L387 160 L392 160 L397 160 L402 160 L407 160 L412 160 L417 160 L422 160 L427 160 L432 160 L437 160 L441 160 L446 160 L451 160 L456 160 L461 160 L466 160 L471 160 L476 160 L481 160 L486 160 L491 160 L496 160 L501 160 L506 160 L511 160 L516 160 L521 160 L526 160 L531 160 L536 160 L541 160 L546 160 L550 160 L555 160 L560 160 L565 160 L570 160 L575 160 L580 160 L585 160 L590 160 L595 160 L600 160" fill="none" stroke="var(--amber)" stroke-width="2.4"/>
+          <path d="M55 50 L60 51 L65 54 L70 58 L75 61 L80 65 L85 68 L90 72 L95 75 L100 78 L105 81 L110 84 L114 87 L119 89 L124 92 L129 95 L134 97 L139 99 L144 102 L149 104 L154 106 L159 108 L164 110 L169 112 L174 113 L179 115 L184 117 L189 118 L194 120 L199 121 L204 123 L209 124 L214 125 L219 127 L223 128 L228 129 L233 130 L238 131 L243 132 L248 133 L253 134 L258 135 L263 136 L268 137 L273 138 L278 139 L283 140 L288 140 L293 141 L298 142 L303 142 L308 143 L313 144 L318 144 L323 145 L328 145 L332 146 L337 146 L342 147 L347 147 L352 148 L357 148 L362 149 L367 149 L372 150 L377 150 L382 150 L387 151 L392 151 L397 151 L402 152 L407 152 L412 152 L417 153 L422 153 L427 153 L432 153 L437 154 L441 154 L446 154 L451 154 L456 155 L461 155 L466 155 L471 155 L476 155 L481 155 L486 156 L491 156 L496 156 L501 156 L506 156 L511 156 L516 157 L521 157 L526 157 L531 157 L536 157 L541 157 L546 157 L550 157 L555 157 L560 158 L565 158 L570 158 L575 158 L580 158 L585 158 L590 158 L595 158 L600 158" fill="none" stroke="var(--purple)" stroke-width="2.4"/>
+        </svg>
+    <div class="legend">
+      <span><i style="background:var(--blue)"></i> Não amortecido (ζ = 0)</span>
+      <span><i style="background:var(--teal)"></i> Subamortecido (0 &lt; ζ &lt; 1)</span>
+      <span><i style="background:var(--amber)"></i> Crítico (ζ = 1)</span>
+      <span><i style="background:var(--purple)"></i> Superamortecido (ζ &gt; 1)</span>
+    </div>
+    <figcaption>Figura 3 — Resposta dos quatro regimes a um mesmo deslocamento inicial (mesma
+    <span class="math">ω<sub>n</sub></span>, valores diferentes de <span class="math">ζ</span>).</figcaption>
+  </figure>
+
+  <h2>5. Aplicação real: amortecedores de carros e motos</h2>
+  <p>A suspensão de um veículo é um sistema <strong>massa-mola-amortecedor</strong>: a <strong>mola</strong>
+  sustenta o peso e absorve impactos, e o <strong>amortecedor</strong> (cilindro com óleo) <strong>dissipa a
+  energia</strong> após cada buraco ou lombada. O objetivo é fazer o veículo voltar rapidamente ao equilíbrio.</p>
+  <ul>
+    <li><strong>Amortecimento de menos</strong> (muito subamortecido): o carro fica "flutuando", balançando
+    várias vezes — desconfortável e perigoso, pois os pneus perdem aderência. É o caso de um amortecedor gasto.</li>
+    <li><strong>Amortecimento de mais</strong> (superamortecido): a suspensão fica "dura" e lenta, transmitindo
+    cada irregularidade aos ocupantes.</li>
+    <li><strong>Ponto ideal:</strong> dissipar a energia <strong>rapidamente</strong>, sem ficar oscilando.</li>
+  </ul>
+  <p>O comportamento desejado é descrito como <strong>"retornar rapidamente ao equilíbrio sem oscilar
+  excessivamente"</strong>. No modelo ideal, isso corresponde ao <strong>amortecimento crítico</strong>
+  (<span class="math">ζ = 1</span>). Na prática, o projeto busca um comportamento <strong>próximo do crítico ou
+  levemente subamortecido</strong>, com amortecimento suficiente para matar a oscilação rápido sem deixar a
+  suspensão dura demais. Não há um valor único de <span class="math">ζ</span>: é um compromisso entre
+  <strong>conforto</strong>, <strong>estabilidade</strong> e <strong>aderência</strong>, dependendo de pneus,
+  geometria da suspensão e tipo de via.</p>
+
+  <h2>6. Conclusão</h2>
+  <p>Partindo apenas da <strong>2ª Lei de Newton</strong>, construímos e interpretamos os dois modelos centrais
+  da vibração livre de um grau de liberdade. O <strong>oscilador harmônico simples</strong>
+  (<span class="math">m ẍ + k x = 0</span>) leva à equação padrão <span class="math">ẍ + ω<sub>n</sub><sup>2</sup>x = 0</span>,
+  com solução oscilatória de amplitude constante e <span class="math">ω<sub>n</sub> = <span class="sqrt"><span class="rad">k/m</span></span></span>.
+  O <strong>oscilador amortecido</strong> (<span class="math">m ẍ + c ẋ + k x = 0</span>) introduz a dissipação,
+  e a razão <span class="math">ζ = c/c<sub>c</sub></span> classifica o movimento em <strong>subamortecido</strong>,
+  <strong>criticamente amortecido</strong> e <strong>superamortecido</strong>. A relevância prática aparece nos
+  amortecedores veiculares, que buscam um comportamento <strong>próximo do crítico</strong>. Esses conceitos são
+  a base do estudo de vibrações em engenharia.</p>
+
+  <h2>7. Referências</h2>
+  <ul>
+    <li><strong>HIBBELER, R. C.</strong> <em>Dinâmica: Mecânica para Engenharia.</em> Capítulo 22 — "Vibrações":
+      <ul>
+        <li>Seção 22.1 — <em>Vibração livre não amortecida</em> (pp. 575–580): Eqs. 22.1 a 22.16.</li>
+        <li>Seção 22.4 — <em>Vibração livre amortecida viscosa</em> (pp. 595–597): Eqs. 22.27 a 22.34; Fig. 22.16.</li>
+        <li><em>Revisão do Capítulo</em> (pp. 607–608): casos de amortecimento e <span class="math">c<sub>c</sub> = 2mω<sub>n</sub></span>.</li>
+      </ul>
+    </li>
+    <li>Material de apoio (fotografias do capítulo): <code>cap22_part1.pdf</code> e <code>cap22_part2.pdf</code>.</li>
+  </ul>
+  <p class="small muted">As numerações de equação e as páginas referem-se à edição brasileira do Hibbeler usada
+  como fonte. Todo o texto foi redigido com palavras próprias, sem reprodução de trechos longos do original.</p>
+
+</article>
+</body>
+</html>
